@@ -3,33 +3,29 @@
 @section('title', 'KROMA® — Portafolio & Casos de Estudio UI/UX')
 
 @section('content')
-    <!-- Cabecera Editorial (Abierta, sin cajas artificiales) -->
+    <!-- Cabecera Editorial de Agencia (Sin textos técnicos de BD) -->
     <section class="pb-12 mb-10 border-b border-white/[0.08]">
         <div class="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-zinc-500 mb-6">
-            <span>[ARCHIVE 01 — {{ date('Y') }}]</span>
+            <span>[SELECTED WORKS — {{ date('Y') }}]</span>
             <span>—</span>
-            <span>SELECTED DIGITAL PRODUCTS & CASE STUDIES</span>
+            <span>DIGITAL PRODUCT DESIGN & ENGINEERING</span>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
             <div class="lg:col-span-8">
                 <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.03]">
-                    Productos digitales donde la <span class="font-serif italic font-normal text-zinc-300">arquitectura de datos</span> eleva el diseño visual.
+                    Diseñamos productos digitales donde la <span class="font-serif italic font-normal text-zinc-300">claridad visual</span> impulsa resultados.
                 </h1>
             </div>
             <div class="lg:col-span-4 lg:border-l lg:border-white/[0.08] lg:pl-8">
                 <p class="text-sm text-zinc-400 leading-relaxed">
-                    Repositorio curado de sistemas de diseño, investigación UX e interfaces de alta precisión conectadas en tiempo real mediante Laravel & MySQL.
+                    Estudio independiente especializado en investigación UX, sistemas de diseño escalables, dirección de arte e interfaces de alta conversión para startups globales.
                 </p>
-                <div class="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between font-mono text-[11px] text-zinc-500">
-                    <span>TABLAS RELACIONALES: 05</span>
-                    <span>CASOS ACTIVOS: {{ $categories->sum('projects_count') }}</span>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Barra de Filtros por Disciplina (RF-01) -->
+    <!-- Barra de Filtros por Disciplina -->
     <section class="mb-12 flex flex-wrap items-center justify-between gap-4">
         @php
             $currentCategory = request()->query('category');
@@ -38,7 +34,7 @@
         <div class="flex flex-wrap items-center gap-2">
             <a href="{{ route('projects.index') }}"
                class="px-4 py-2 rounded-full text-xs font-medium transition border {{ !$currentCategory ? 'bg-zinc-100 text-zinc-950 border-zinc-100 font-semibold' : 'bg-surface text-zinc-400 border-white/[0.08] hover:border-white/20 hover:text-white' }}">
-                Todos <span class="font-mono text-[11px] opacity-70 ml-1">[{{ $categories->sum('projects_count') }}]</span>
+                Todos los proyectos
             </a>
 
             @foreach ($categories as $category)
@@ -46,15 +42,14 @@
                    class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-medium transition border {{ $currentCategory === $category->slug ? 'bg-zinc-100 text-zinc-950 border-zinc-100 font-semibold' : 'bg-surface text-zinc-400 border-white/[0.08] hover:border-white/20 hover:text-white' }}">
                     <span class="w-2 h-2 rounded-full" style="background-color: {{ $category->color_hex }}"></span>
                     <span>{{ $category->name }}</span>
-                    <span class="font-mono text-[11px] opacity-60">[{{ $category->projects_count }}]</span>
                 </a>
             @endforeach
         </div>
 
         @auth
             <a href="{{ route('projects.create') }}"
-               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white hover:text-zinc-950 px-5 py-2 text-xs font-semibold text-white transition">
-                <span>+ Nuevo Caso de Estudio</span>
+               class="inline-flex items-center gap-2 rounded-full bg-zinc-100 hover:bg-white text-zinc-950 px-5 py-2.5 text-xs font-bold transition shadow-sm">
+                <span>+ Publicar Caso de Estudio</span>
             </a>
         @endauth
     </section>
@@ -64,7 +59,7 @@
         @forelse ($projects as $index => $project)
             <article class="group flex flex-col justify-between">
                 <div>
-                    <!-- Metadatos Superiores de la Tarjeta (Fuera de la imagen para máxima limpieza) -->
+                    <!-- Metadatos Superiores de la Tarjeta -->
                     <div class="flex items-center justify-between font-mono text-xs text-zinc-400 mb-3 pb-2 border-b border-white/[0.08]">
                         <div class="flex items-center gap-2.5">
                             <span class="text-zinc-600">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
@@ -85,17 +80,15 @@
 
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
 
-                        <!-- Indicador Discreto si es Destacado -->
                         @if ($project->is_featured)
                             <div class="absolute top-4 right-4 rounded-full bg-obsidian/80 backdrop-blur-md border border-white/15 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber-300">
-                                ★ Featured Case
+                                ★ Selección Destacada
                             </div>
                         @endif
 
-                        <!-- Botón Flotante en Hover -->
                         <div class="absolute bottom-4 right-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-300">
                             <span class="inline-flex items-center gap-1.5 rounded-full bg-white text-zinc-950 px-4 py-2 text-xs font-bold shadow-xl">
-                                Abrir Caso ↗
+                                Ver Caso de Estudio ↗
                             </span>
                         </div>
                     </a>
@@ -125,21 +118,22 @@
                 <div class="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between">
                     <a href="{{ route('projects.show', $project) }}"
                        class="font-mono text-xs uppercase tracking-wider text-zinc-300 hover:text-white inline-flex items-center gap-2 transition">
-                        <span>Explorar documentación</span>
+                        <span>Explorar caso completo</span>
                         <span class="transition-transform group-hover:translate-x-1">→</span>
                     </a>
 
                     @auth
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2">
                             <a href="{{ route('projects.edit', $project) }}"
-                               class="font-mono text-xs text-zinc-400 hover:text-white transition">
-                                [Editar]
+                               class="rounded-full border border-white/10 bg-surface hover:bg-white hover:text-zinc-950 px-3.5 py-1 text-xs font-medium text-zinc-300 transition">
+                                Editar
                             </a>
                             <form action="{{ route('projects.destroy', $project) }}" method="POST" class="form-delete inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="font-mono text-xs text-rose-400/80 hover:text-rose-400 transition">
-                                    [Eliminar]
+                                <button type="submit"
+                                        class="rounded-full border border-rose-500/25 bg-rose-500/10 hover:bg-rose-500/20 px-3.5 py-1 text-xs font-medium text-rose-300 transition">
+                                    Eliminar
                                 </button>
                             </form>
                         </div>
@@ -148,12 +142,12 @@
             </article>
         @empty
             <div class="col-span-full rounded-2xl border border-dashed border-white/15 bg-surface/40 p-16 text-center">
-                <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">[00 RESULTADOS]</p>
-                <p class="text-xl font-bold text-white">No hay casos registrados en esta disciplina</p>
-                <p class="mt-1 text-sm text-zinc-400">Selecciona otra categoría o registra un nuevo caso de estudio.</p>
+                <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">[ARCHIVO VACÍO]</p>
+                <p class="text-xl font-bold text-white">No hay casos publicados en esta disciplina</p>
+                <p class="mt-1 text-sm text-zinc-400">Explora otra categoría o publica un nuevo proyecto en el estudio.</p>
                 <a href="{{ route('projects.index') }}"
                    class="mt-6 inline-block rounded-full bg-zinc-100 px-5 py-2.5 text-xs font-semibold text-zinc-950 hover:bg-white transition">
-                    Mostrar archivo completo
+                    Ver todo el portafolio
                 </a>
             </div>
         @endforelse

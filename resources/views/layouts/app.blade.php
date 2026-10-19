@@ -51,7 +51,7 @@
     <!-- Navbar Editorial -->
     @include('partials.navbar')
 
-    <!-- Alertas Globales -->
+    <!-- Alertas Globales en Pantalla -->
     <div class="max-w-7xl mx-auto w-full px-6 sm:px-10 pt-6">
         @include('partials.alerts')
     </div>
@@ -67,16 +67,16 @@
             <div class="flex items-center gap-3">
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span class="font-mono text-xs uppercase tracking-widest text-zinc-400">
-                    KROMA® STUDIO — ARCHIVO DE ARQUITECTURA WEB & UI/UX
+                    KROMA® STUDIO — DIGITAL PRODUCT & UI/UX PORTFOLIO
                 </span>
             </div>
             <div class="font-mono text-xs text-zinc-500">
-                LARAVEL MVC · ELOQUENT ORM · {{ date('Y') }}
+                ALL RIGHTS RESERVED · {{ date('Y') }}
             </div>
         </div>
     </footer>
 
-    <!-- Configuración SweetAlert2 Minimalista -->
+    <!-- Configuración SweetAlert2 Minimalista (Éxito, Error y Validaciones) -->
     <script>
         const swalStudioConfig = {
             background: '#111114',
@@ -108,18 +108,33 @@
             });
         @endif
 
+        @if($errors->any())
+            Swal.fire({
+                ...swalStudioConfig,
+                title: 'Revisa los campos del formulario',
+                html: `<ul style="text-align:left; font-size:13px; line-height:1.7; color:#fda4af; list-style:disc; padding-left:18px;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>`,
+                icon: 'warning',
+                confirmButtonColor: '#ffffff',
+                confirmButtonText: '<span style="color:#09090b;font-weight:700;">Corregir datos</span>'
+            });
+        @endif
+
         document.querySelectorAll('.form-delete').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 Swal.fire({
                     ...swalStudioConfig,
                     title: '¿Confirmar eliminación?',
-                    text: 'El registro y sus dependencias en la base de datos se eliminarán de forma permanente.',
+                    text: 'Esta acción eliminará el registro de forma permanente.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#f43f5e',
                     cancelButtonColor: '#27272a',
-                    confirmButtonText: 'Sí, eliminar registro',
+                    confirmButtonText: 'Sí, eliminar',
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {

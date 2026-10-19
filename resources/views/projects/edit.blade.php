@@ -3,168 +3,231 @@
 @section('title', 'Editar: ' . $project->title . ' — KROMA®')
 
 @section('content')
-    <div class="max-w-4xl mx-auto">
-        <div class="mb-8 pb-6 border-b border-white/[0.08]">
-            <a href="{{ route('projects.show', $project) }}" class="font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-white transition">
-                ← Volver al caso de estudio
-            </a>
-            <h1 class="text-3xl sm:text-4xl font-bold text-white mt-3">
-                Editar <span class="font-serif italic font-normal text-zinc-300">Caso #{{ str_pad($project->id, 2, '0', STR_PAD_LEFT) }}</span>
-            </h1>
+    <div class="max-w-5xl mx-auto">
+        <div class="mb-10 pb-6 border-b border-white/[0.08] flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+                <a href="{{ route('projects.show', $project) }}" class="font-mono text-xs uppercase tracking-wider text-zinc-400 hover:text-white transition">
+                    ← Volver al caso de estudio
+                </a>
+                <h1 class="text-3xl sm:text-5xl font-bold text-white mt-3 tracking-tight">
+                    Editar <span class="font-serif italic font-normal text-zinc-300">Caso de Estudio</span>
+                </h1>
+            </div>
+            <span class="font-mono text-xs text-zinc-500 uppercase tracking-widest">{{ $project->client->company_name }}</span>
         </div>
 
-        <form action="{{ route('projects.update', $project) }}" method="POST" class="rounded-2xl border border-white/[0.08] bg-surface p-6 sm:p-10 space-y-8">
+        <form action="{{ route('projects.update', $project) }}" method="POST" novalidate class="space-y-10">
             @csrf
             @method('PUT')
 
-            <!-- Bloque 01: Llaves Foráneas -->
-            <div>
-                <div class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4 pb-2 border-b border-white/[0.06]">
-                    [01 // RELACIONES DE BASE DE DATOS — LLAVES FORÁNEAS]
+            <!-- Bloque 01: Clasificación y Cliente -->
+            <div class="rounded-2xl border border-white/[0.08] bg-surface p-6 sm:p-9">
+                <div class="font-mono text-xs uppercase tracking-widest text-zinc-400 mb-6 pb-3 border-b border-white/[0.06]">
+                    01 / Clasificación y Cliente
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <label for="category_id" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            Disciplina / Categoría *
+                        <label for="category_id" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                            Disciplina de Diseño *
                         </label>
-                        <select name="category_id" id="category_id" required
-                                class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                        <select name="category_id" id="category_id"
+                                class="w-full rounded-xl border {{ $errors->has('category_id') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3.5 text-sm text-white focus:border-white focus:outline-none">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" @selected(old('category_id', $project->category_id) == $category->id)>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('category_id')
+                            <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
-                        <label for="client_id" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            Cliente Corporativo *
+                        <label for="client_id" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                            Cliente / Marca *
                         </label>
-                        <select name="client_id" id="client_id" required
-                                class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                        <select name="client_id" id="client_id"
+                                class="w-full rounded-xl border {{ $errors->has('client_id') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3.5 text-sm text-white focus:border-white focus:outline-none">
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}" @selected(old('client_id', $project->client_id) == $client->id)>
-                                    {{ $client->company_name }} ({{ $client->country }})
+                                    {{ $client->company_name }} · {{ $client->country }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('client_id')
+                            <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
 
-            <!-- Bloque 02: Identidad y Narrativa -->
-            <div>
-                <div class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4 pb-2 border-b border-white/[0.06]">
-                    [02 // IDENTIDAD Y NARRATIVA UX/UI]
+            <!-- Bloque 02: Narrativa del Caso -->
+            <div class="rounded-2xl border border-white/[0.08] bg-surface p-6 sm:p-9 space-y-6">
+                <div class="font-mono text-xs uppercase tracking-widest text-zinc-400 mb-2 pb-3 border-b border-white/[0.06]">
+                    02 / Narrativa del Caso de Estudio
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label for="title" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            Título del Caso *
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-6">
+                    <div class="sm:col-span-7">
+                        <label for="title" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                            Título del Proyecto *
                         </label>
-                        <input type="text" name="title" id="title" value="{{ old('title', $project->title) }}" required
-                               class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                        <input type="text" name="title" id="title" value="{{ old('title', $project->title) }}"
+                               class="w-full rounded-xl border {{ $errors->has('title') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3.5 text-sm text-white focus:border-white focus:outline-none">
+                        @error('title')
+                            <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label for="slug" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            Slug URL *
+                    <div class="sm:col-span-5">
+                        <label for="slug" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                            Enlace Permanente (Slug) *
                         </label>
-                        <input type="text" name="slug" id="slug" value="{{ old('slug', $project->slug) }}" required
-                               class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 font-mono text-xs text-zinc-400 focus:border-white focus:outline-none">
+                        <input type="text" name="slug" id="slug" value="{{ old('slug', $project->slug) }}"
+                               class="w-full rounded-xl border {{ $errors->has('slug') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3.5 font-mono text-xs text-zinc-400 focus:border-white focus:outline-none">
+                        @error('slug')
+                            <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
-                <div class="mb-6">
-                    <label for="summary" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                        Resumen Ejecutivo *
+                <div>
+                    <label for="summary" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                        Resumen de Impacto *
                     </label>
-                    <input type="text" name="summary" id="summary" value="{{ old('summary', $project->summary) }}" maxlength="255" required
-                           class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                    <input type="text" name="summary" id="summary" value="{{ old('summary', $project->summary) }}" maxlength="255"
+                           class="w-full rounded-xl border {{ $errors->has('summary') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3.5 text-sm text-white focus:border-white focus:outline-none">
+                    @error('summary')
+                        <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                    @enderror
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                     <div>
-                        <label for="challenge_text" class="block font-mono text-xs uppercase text-rose-400 mb-2">
-                            01. El Reto UX *
+                        <label for="challenge_text" class="block font-mono text-[11px] uppercase tracking-wider text-rose-400 mb-2">
+                            El Reto UX *
                         </label>
-                        <textarea name="challenge_text" id="challenge_text" rows="5" required
-                                  class="w-full rounded-xl border border-white/10 bg-obsidian p-4 text-sm text-white focus:border-white focus:outline-none">{{ old('challenge_text', $project->challenge_text) }}</textarea>
+                        <textarea name="challenge_text" id="challenge_text" rows="5"
+                                  class="w-full rounded-xl border {{ $errors->has('challenge_text') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian p-4 text-sm text-white focus:border-white focus:outline-none leading-relaxed">{{ old('challenge_text', $project->challenge_text) }}</textarea>
+                        @error('challenge_text')
+                            <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
-                        <label for="solution_text" class="block font-mono text-xs uppercase text-emerald-400 mb-2">
-                            02. La Solución UI *
+                        <label for="solution_text" class="block font-mono text-[11px] uppercase tracking-wider text-emerald-400 mb-2">
+                            La Solución UI *
                         </label>
-                        <textarea name="solution_text" id="solution_text" rows="5" required
-                                  class="w-full rounded-xl border border-white/10 bg-obsidian p-4 text-sm text-white focus:border-white focus:outline-none">{{ old('solution_text', $project->solution_text) }}</textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bloque 03: Recursos -->
-            <div>
-                <div class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4 pb-2 border-b border-white/[0.06]">
-                    [03 // RECURSOS VISUALES Y PUBLICACIÓN]
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
-                    <div>
-                        <label for="cover_image" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            URL Portada *
-                        </label>
-                        <input type="url" name="cover_image" id="cover_image" value="{{ old('cover_image', $project->cover_image) }}" required
-                               class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
-                    </div>
-
-                    <div>
-                        <label for="figma_url" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            URL Figma
-                        </label>
-                        <input type="url" name="figma_url" id="figma_url" value="{{ old('figma_url', $project->figma_url) }}"
-                               class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
-                    </div>
-
-                    <div>
-                        <label for="live_url" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            URL Sitio en Vivo
-                        </label>
-                        <input type="url" name="live_url" id="live_url" value="{{ old('live_url', $project->live_url) }}"
-                               class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                    <div>
-                        <label for="published_at" class="block font-mono text-xs uppercase text-zinc-300 mb-2">
-                            Fecha de Publicación *
-                        </label>
-                        <input type="date" name="published_at" id="published_at" value="{{ old('published_at', $project->published_at->format('Y-m-d')) }}" required
-                               class="w-full rounded-xl border border-white/10 bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
-                    </div>
-
-                    <div class="pt-5">
-                        <label class="inline-flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="is_featured" value="1" @checked(old('is_featured', $project->is_featured))
-                                   class="w-4 h-4 rounded border-white/20 bg-obsidian text-white focus:ring-0">
-                            <span class="text-sm font-medium text-zinc-200">Destacar en portada (Featured Case ★)</span>
-                        </label>
+                        <textarea name="solution_text" id="solution_text" rows="5"
+                                  class="w-full rounded-xl border {{ $errors->has('solution_text') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian p-4 text-sm text-white focus:border-white focus:outline-none leading-relaxed">{{ old('solution_text', $project->solution_text) }}</textarea>
+                        @error('solution_text')
+                            <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
 
-            <div class="pt-6 border-t border-white/[0.08] flex items-center justify-end gap-4">
+            <!-- Bloque 03: Portada con Previsualización -->
+            <div class="rounded-2xl border border-white/[0.08] bg-surface p-6 sm:p-9">
+                <div class="font-mono text-xs uppercase tracking-widest text-zinc-400 mb-6 pb-3 border-b border-white/[0.06]">
+                    03 / Dirección Visual y Enlaces Externos
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-7 space-y-5">
+                        <div>
+                            <label for="cover_image" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                                URL de Imagen de Portada *
+                            </label>
+                            <input type="url" name="cover_image" id="cover_image" value="{{ old('cover_image', $project->cover_image) }}"
+                                   class="w-full rounded-xl border {{ $errors->has('cover_image') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                            @error('cover_image')
+                                <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="figma_url" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                                    Enlace a Figma
+                                </label>
+                                <input type="url" name="figma_url" id="figma_url" value="{{ old('figma_url', $project->figma_url) }}"
+                                       class="w-full rounded-xl border {{ $errors->has('figma_url') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                                @error('figma_url')
+                                    <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="live_url" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                                    Sitio en Producción
+                                </label>
+                                <input type="url" name="live_url" id="live_url" value="{{ old('live_url', $project->live_url) }}"
+                                       class="w-full rounded-xl border {{ $errors->has('live_url') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                                @error('live_url')
+                                    <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center pt-2">
+                            <div>
+                                <label for="published_at" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-2">
+                                    Fecha de Lanzamiento *
+                                </label>
+                                <input type="date" name="published_at" id="published_at" value="{{ old('published_at', $project->published_at->format('Y-m-d')) }}"
+                                       class="w-full rounded-xl border {{ $errors->has('published_at') ? 'border-rose-500/80' : 'border-white/10' }} bg-obsidian px-4 py-3 text-sm text-white focus:border-white focus:outline-none">
+                                @error('published_at')
+                                    <p class="mt-1.5 font-mono text-xs text-rose-400">↳ {{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="pt-5">
+                                <label class="inline-flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" name="is_featured" value="1" @checked(old('is_featured', $project->is_featured))
+                                           class="w-4 h-4 rounded border-white/20 bg-obsidian text-white focus:ring-0">
+                                    <span class="text-sm font-medium text-zinc-200">Destacar caso en portada (★)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Previsualización en Vivo -->
+                    <div class="lg:col-span-5">
+                        <span class="block font-mono text-[11px] uppercase tracking-wider text-zinc-500 mb-2">
+                            Portada Actual (16:10)
+                        </span>
+                        <div class="aspect-[16/10] w-full rounded-2xl border border-white/10 bg-obsidian overflow-hidden flex items-center justify-center">
+                            <img id="cover_preview" src="{{ old('cover_image', $project->cover_image) }}" alt="{{ $project->title }}"
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-4">
                 <a href="{{ route('projects.show', $project) }}"
-                   class="rounded-full border border-white/15 px-5 py-2.5 text-xs font-semibold text-zinc-300 hover:text-white transition">
+                   class="rounded-full border border-white/15 px-6 py-3 text-xs font-semibold text-zinc-300 hover:text-white transition">
                     Cancelar
                 </a>
                 <button type="submit"
-                        class="rounded-full bg-zinc-100 hover:bg-white text-zinc-950 px-6 py-2.5 text-xs font-bold transition">
-                    Actualizar Caso de Estudio
+                        class="rounded-full bg-zinc-100 hover:bg-white text-zinc-950 px-8 py-3 text-xs font-bold uppercase tracking-wider transition">
+                    Guardar Cambios →
                 </button>
             </div>
         </form>
     </div>
+
+    <script>
+        const coverInput = document.getElementById('cover_image');
+        const coverPreview = document.getElementById('cover_preview');
+
+        coverInput?.addEventListener('input', () => {
+            const url = coverInput.value.trim();
+            if (url.startsWith('http')) {
+                coverPreview.src = url;
+            }
+        });
+    </script>
 @endsection

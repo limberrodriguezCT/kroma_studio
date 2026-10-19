@@ -19,7 +19,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email'    => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
     }
@@ -27,9 +27,9 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.email' => 'Debe ingresar un formato de correo electrónico válido.',
-            'password.required' => 'La contraseña es obligatoria.',
+            'email.required'    => 'Ingresa tu correo electrónico corporativo.',
+            'email.email'       => 'El formato del correo electrónico no es válido.',
+            'password.required' => 'Ingresa tu contraseña para continuar.',
         ];
     }
 
@@ -59,12 +59,12 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => 'Demasiados intentos de acceso. Por favor, intente nuevamente en ' . ceil($seconds / 60) . ' minutos.',
+            'email' => "Demasiados intentos de acceso. Intenta nuevamente en {$seconds} segundos.",
         ]);
     }
 
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
 }

@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Procesa la petición de autenticación y redirige al panel de eventos.
+     * Procesa la petición de autenticación entrante.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,11 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('events.index', absolute: false));
+        return redirect()->intended(route('projects.index', absolute: false))
+            ->with('success', '¡Bienvenido nuevamente al panel creativo de Kroma Studio!');
     }
 
     /**
-     * Cierra la sesión activa del usuario.
+     * Cierra la sesión autenticada.
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -42,6 +43,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('projects.index')
+            ->with('success', 'Has cerrado sesión correctamente.');
     }
 }
