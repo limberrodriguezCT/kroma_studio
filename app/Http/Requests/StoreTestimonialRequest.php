@@ -17,7 +17,7 @@ class StoreTestimonialRequest extends FormRequest
             'author_name' => ['required', 'string', 'min:3', 'max:100'],
             'author_role' => ['required', 'string', 'min:3', 'max:100'],
             'rating'      => ['required', 'integer', 'min:1', 'max:5'],
-            'comment'     => ['required', 'string', 'min:15', 'max:600'],
+            'comment'     => ['required', 'string', 'min:10', 'max:1000'],
         ];
     }
 
@@ -25,34 +25,12 @@ class StoreTestimonialRequest extends FormRequest
     {
         return [
             'author_name.required' => 'El nombre del autor de la reseña es obligatorio.',
-            'author_name.string'   => 'El nombre del autor debe ser texto válido.',
-            'author_name.min'      => 'El nombre del autor debe tener al menos :min caracteres.',
-            'author_name.max'      => 'El nombre del autor no puede exceder los :max caracteres.',
-
-            'author_role.required' => 'El cargo o puesto del autor es obligatorio.',
-            'author_role.string'   => 'El cargo del autor debe ser texto válido.',
-            'author_role.min'      => 'El cargo del autor debe tener al menos :min caracteres.',
-            'author_role.max'      => 'El cargo del autor no puede exceder los :max caracteres.',
-
-            'rating.required'      => 'Debes seleccionar una calificación de estrellas.',
-            'rating.integer'       => 'La calificación debe ser un número entero.',
-            'rating.min'           => 'La calificación mínima es de :min estrella.',
-            'rating.max'           => 'La calificación máxima es de :max estrellas.',
-
-            'comment.required'     => 'El comentario del testimonio es obligatorio.',
-            'comment.string'       => 'El testimonio debe ser texto válido.',
-            'comment.min'          => 'El testimonio debe tener al menos :min caracteres.',
-            'comment.max'          => 'El testimonio no debe superar los :max caracteres.',
-        ];
-    }
-
-    public function attributes(): array
-    {
-        return [
-            'author_name' => 'nombre del autor',
-            'author_role' => 'cargo del autor',
-            'rating'      => 'calificación',
-            'comment'     => 'comentario',
+            'author_role.required' => 'El cargo o empresa del autor es obligatorio.',
+            'rating.required'      => 'Selecciona una calificación de 1 a 5 estrellas.',
+            'rating.min'           => 'La calificación mínima es de 1 estrella.',
+            'rating.max'           => 'La calificación máxima es de 5 estrellas.',
+            'comment.required'     => 'Escribe el comentario o testimonio del cliente.',
+            'comment.min'          => 'El testimonio debe contener al menos :min caracteres.',
         ];
     }
 }

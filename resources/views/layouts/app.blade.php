@@ -1,78 +1,99 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>@yield('title', 'Sistema de Certificados - CNFD')</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        .cnfd-bg { background-color: #0d47a1; }
-        .cnfd-cyan { background-color: #00bcd4; }
-        .cnfd-magenta { background-color: #e91e63; }
-        .cnfd-rounded { border-radius: 50%; border: 6px solid white; }
-    </style>
-</head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <nav class="cnfd-bg p-4 shadow-lg flex justify-between items-center text-white">
-        <div class="font-bold text-xl tracking-wider">
-            CNFD - Emisión de Certificados
-        </div>
-        <div>
-            @auth
-                <a href="{{ route('events.index') }}" class="mr-4 font-bold hover:text-cyan-300">Eventos</a>
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-                    <button type="submit" class="font-bold hover:text-cyan-300">Cerrar Sesión</button>
-                </form>
-            @endauth
-        </div>
-    </nav>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Kroma Studio — UI/UX Case Studies')</title>
 
-    <main class="container mx-auto mt-8 p-4">
+    <!-- Tipografía Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN + Configuración Dark UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- SweetAlert2 para alertas elegantes y confirmaciones -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Barra de Navegación integrada con Breeze -->
+    @include('partials.navbar')
+
+    <!-- Alertas Visuales y Resumen de Errores -->
+    <div class="max-w-7xl mx-auto w-full px-6 pt-6">
+        @include('partials.alerts')
+    </div>
+
+    <!-- Contenido Dinámico Principal -->
+    <main class="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
         @yield('content')
     </main>
 
+    <!-- Footer Minimalista del Estudio -->
+    <footer class="border-t border-slate-900 bg-slate-950/90 py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>© {{ date('Y') }} Kroma Studio. Proyecto Académico de Arquitectura Backend & UI/UX.</p>
+            <p>Desarrollado con Laravel, Eloquent ORM, Breeze & Tailwind CSS</p>
+        </div>
+    </footer>
+
+    <!-- Sistema de Alertas Interactivas SweetAlert2 (Tema Dark UI) -->
     <script>
+        const swalDarkConfig = {
+            background: '#0f172a',
+            color: '#f8fafc',
+        };
+
         @if(session('success'))
             Swal.fire({
-                title: 'Proceso Exitoso',
-                text: '{{ session("success") }}',
+                ...swalDarkConfig,
+                title: '¡Operación Exitosa!',
+                text: @json(session('success')),
                 icon: 'success',
-                confirmButtonColor: '#0d47a1'
+                confirmButtonColor: '#6366f1',
+                confirmButtonText: 'Entendido'
             });
         @endif
 
         @if(session('error'))
             Swal.fire({
-                title: 'Aviso',
-                text: '{{ session("error") }}',
+                ...swalDarkConfig,
+                title: 'Ocurrió un problema',
+                text: @json(session('error')),
                 icon: 'error',
-                confirmButtonColor: '#e91e63'
+                confirmButtonColor: '#f43f5e',
+                confirmButtonText: 'Cerrar'
             });
         @endif
 
-        @if($errors->any())
-            Swal.fire({
-                title: 'Atención',
-                html: '<ul class="text-left font-bold text-gray-700">@foreach($errors->all() as $error) <li>- {{ $error }}</li> @endforeach</ul>',
-                icon: 'warning',
-                confirmButtonColor: '#e91e63'
-            });
-        @endif
-
+        // Confirmación elegante para cualquier formulario con la clase .form-delete
         document.querySelectorAll('.form-delete').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 Swal.fire({
-                    title: '¿Eliminar evento?',
-                    text: "Esta acción es irreversible. Se eliminará el evento, su plantilla y todos los participantes registrados.",
+                    ...swalDarkConfig,
+                    title: '¿Confirmar eliminación?',
+                    text: 'Esta acción no se puede deshacer y eliminará el registro de la base de datos.',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#e91e63',
-                    cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Sí, eliminar todo',
+                    confirmButtonColor: '#f43f5e',
+                    cancelButtonColor: '#334155',
+                    confirmButtonText: 'Sí, eliminar',
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
