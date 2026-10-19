@@ -1,51 +1,55 @@
-<header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <!-- Logo del Estudio -->
-        <a href="{{ route('projects.index') }}" class="flex items-center gap-3 group">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center font-extrabold text-white shadow-lg shadow-indigo-500/20">
-                K
+<header class="sticky top-0 z-50 backdrop-blur-xl bg-obsidian/80 border-b border-white/[0.08]">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
+        <!-- Identidad tipográfica de estudio (Sin gradientes genéricos) -->
+        <a href="{{ route('projects.index') }}" class="flex items-center gap-4 group">
+            <div class="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-black text-base tracking-tighter transition duration-300 group-hover:rotate-6">
+                K®
             </div>
-            <div>
-                <span class="font-bold text-lg tracking-tight text-white">Kroma Studio</span>
-                <span class="text-xs block text-slate-400 -mt-1">UI/UX Case Studies</span>
+            <div class="flex flex-col">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-base tracking-tight text-white">Kroma Studio</span>
+                    <span class="hidden sm:inline-block font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded bg-white/[0.06] text-zinc-400 border border-white/[0.06]">
+                        Index v2.6
+                    </span>
+                </div>
+                <span class="font-mono text-[11px] text-zinc-500">Digital Product & Design Archive</span>
             </div>
         </a>
 
         <!-- Navegación y Estado de Autenticación (Laravel Breeze) -->
-        <nav class="flex items-center gap-4">
-            <a href="{{ route('projects.index') }}" class="text-sm font-medium text-slate-300 hover:text-white transition">
-                Catálogo de Casos
+        <nav class="flex items-center gap-6">
+            <a href="{{ route('projects.index') }}"
+               class="text-xs font-mono uppercase tracking-wider text-zinc-400 hover:text-white transition">
+                [01] Catálogo
             </a>
 
             @auth
-                <!-- Botón para crear caso de estudio -->
                 <a href="{{ route('projects.create') }}"
-                   class="inline-flex items-center gap-2 bg-white text-slate-950 hover:bg-indigo-50 font-semibold text-sm px-4 py-2.5 rounded-xl transition shadow-sm">
-                    <span>+ Nuevo Caso</span>
+                   class="inline-flex items-center gap-2 bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-xs px-4 py-2.5 rounded-full transition">
+                    <span>+ Publicar Caso</span>
                 </a>
 
-                <!-- Usuario autenticado y botón de Salir (Ruta logout de Breeze) -->
-                <div class="flex items-center gap-3 pl-3 border-l border-slate-800">
-                    <a href="{{ route('profile.edit') }}" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300">
+                <div class="flex items-center gap-4 pl-4 border-l border-white/10">
+                    <a href="{{ route('profile.edit') }}" class="font-mono text-xs text-zinc-300 hover:text-white transition">
                         {{ Auth::user()->name }}
                     </a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="text-xs font-medium text-slate-400 hover:text-rose-400 transition">
-                            Salir
+                        <button type="submit" class="font-mono text-xs uppercase tracking-wider text-zinc-500 hover:text-rose-400 transition">
+                            Salir ↗
                         </button>
                     </form>
                 </div>
             @else
-                <!-- Botones si no ha iniciado sesión (Rutas login y register de Breeze) -->
-                <div class="flex items-center gap-3 pl-3 border-l border-slate-800">
-                    <a href="{{ route('login') }}" class="text-sm font-medium text-slate-300 hover:text-white transition">
-                        Iniciar sesión
+                <div class="flex items-center gap-3 pl-4 border-l border-white/10">
+                    <a href="{{ route('login') }}"
+                       class="text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white px-3 py-2 transition">
+                        Acceso
                     </a>
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}"
-                           class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-4 py-2 rounded-xl transition">
+                           class="bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-xs px-4 py-2.5 rounded-full transition">
                             Registrarse
                         </a>
                     @endif

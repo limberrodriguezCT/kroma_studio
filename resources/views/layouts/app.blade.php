@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Kroma Studio — UI/UX Case Studies')</title>
+    <title>@yield('title', 'KROMA® — Digital Product & UI/UX Archive')</title>
 
-    <!-- Tipografía Plus Jakarta Sans -->
+    <!-- Sistema Tipográfico de Agencia: Plus Jakarta Sans + Instrument Serif + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN + Configuración Dark UI -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,60 +20,87 @@
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Instrument Serif"', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: '#09090B',
+                        surface: '#111114',
                     }
                 }
             }
         }
     </script>
 
-    <!-- SweetAlert2 para alertas elegantes y confirmaciones -->
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-    <!-- Barra de Navegación integrada con Breeze -->
+    <style>
+        body {
+            background-color: #09090B;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04) 0%, transparent 60%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 64px 64px, 64px 64px;
+        }
+    </style>
+</head>
+<body class="text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-zinc-950">
+
+    <!-- Navbar Editorial -->
     @include('partials.navbar')
 
-    <!-- Alertas Visuales y Resumen de Errores -->
-    <div class="max-w-7xl mx-auto w-full px-6 pt-6">
+    <!-- Alertas Globales -->
+    <div class="max-w-7xl mx-auto w-full px-6 sm:px-10 pt-6">
         @include('partials.alerts')
     </div>
 
-    <!-- Contenido Dinámico Principal -->
-    <main class="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+    <!-- Contenido Principal -->
+    <main class="flex-1 max-w-7xl mx-auto w-full px-6 sm:px-10 py-10">
         @yield('content')
     </main>
 
-    <!-- Footer Minimalista del Estudio -->
-    <footer class="border-t border-slate-900 bg-slate-950/90 py-8 mt-16">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-            <p>© {{ date('Y') }} Kroma Studio. Proyecto Académico de Arquitectura Backend & UI/UX.</p>
-            <p>Desarrollado con Laravel, Eloquent ORM, Breeze & Tailwind CSS</p>
+    <!-- Footer Editorial -->
+    <footer class="border-t border-white/[0.08] bg-obsidian/90 mt-24">
+        <div class="max-w-7xl mx-auto px-6 sm:px-10 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="font-mono text-xs uppercase tracking-widest text-zinc-400">
+                    KROMA® STUDIO — ARCHIVO DE ARQUITECTURA WEB & UI/UX
+                </span>
+            </div>
+            <div class="font-mono text-xs text-zinc-500">
+                LARAVEL MVC · ELOQUENT ORM · {{ date('Y') }}
+            </div>
         </div>
     </footer>
 
-    <!-- Sistema de Alertas Interactivas SweetAlert2 (Tema Dark UI) -->
+    <!-- Configuración SweetAlert2 Minimalista -->
     <script>
-        const swalDarkConfig = {
-            background: '#0f172a',
-            color: '#f8fafc',
+        const swalStudioConfig = {
+            background: '#111114',
+            color: '#f4f4f5',
+            customClass: {
+                popup: 'border border-white/10 rounded-2xl',
+            }
         };
 
         @if(session('success'))
             Swal.fire({
-                ...swalDarkConfig,
-                title: '¡Operación Exitosa!',
+                ...swalStudioConfig,
+                title: 'Operación completada',
                 text: @json(session('success')),
                 icon: 'success',
-                confirmButtonColor: '#6366f1',
-                confirmButtonText: 'Entendido'
+                confirmButtonColor: '#ffffff',
+                confirmButtonText: '<span style="color:#09090b;font-weight:700;">Aceptar</span>'
             });
         @endif
 
         @if(session('error'))
             Swal.fire({
-                ...swalDarkConfig,
-                title: 'Ocurrió un problema',
+                ...swalStudioConfig,
+                title: 'Atención',
                 text: @json(session('error')),
                 icon: 'error',
                 confirmButtonColor: '#f43f5e',
@@ -81,19 +108,18 @@
             });
         @endif
 
-        // Confirmación elegante para cualquier formulario con la clase .form-delete
         document.querySelectorAll('.form-delete').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 Swal.fire({
-                    ...swalDarkConfig,
+                    ...swalStudioConfig,
                     title: '¿Confirmar eliminación?',
-                    text: 'Esta acción no se puede deshacer y eliminará el registro de la base de datos.',
+                    text: 'El registro y sus dependencias en la base de datos se eliminarán de forma permanente.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#f43f5e',
-                    cancelButtonColor: '#334155',
-                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonColor: '#27272a',
+                    confirmButtonText: 'Sí, eliminar registro',
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {

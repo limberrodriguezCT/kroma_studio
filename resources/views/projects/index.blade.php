@@ -1,129 +1,145 @@
 @extends('layouts.app')
 
-@section('title', 'Kroma Studio — Portafolio & Casos de Estudio UI/UX')
+@section('title', 'KROMA® — Portafolio & Casos de Estudio UI/UX')
 
 @section('content')
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900/90 to-slate-950 p-8 sm:p-12 mb-10 shadow-2xl">
-        <div class="max-w-3xl">
-            <span class="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-1 text-xs font-semibold text-indigo-300 mb-4">
-                <span class="h-2 w-2 rounded-full bg-indigo-400 animate-pulse"></span>
-                Agencia de Diseño de Producto Digital & Ingeniería
-            </span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                Casos de estudio donde el <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">diseño UI/UX</span> impulsa métricas reales.
-            </h1>
-            <p class="mt-4 text-slate-400 text-base sm:text-lg leading-relaxed">
-                Explora nuestra arquitectura de productos digitales, sistemas de diseño y experiencias interactivas conectadas mediante bases de datos relacionales.
-            </p>
+    <!-- Cabecera Editorial (Abierta, sin cajas artificiales) -->
+    <section class="pb-12 mb-10 border-b border-white/[0.08]">
+        <div class="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-zinc-500 mb-6">
+            <span>[ARCHIVE 01 — {{ date('Y') }}]</span>
+            <span>—</span>
+            <span>SELECTED DIGITAL PRODUCTS & CASE STUDIES</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+            <div class="lg:col-span-8">
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.03]">
+                    Productos digitales donde la <span class="font-serif italic font-normal text-zinc-300">arquitectura de datos</span> eleva el diseño visual.
+                </h1>
+            </div>
+            <div class="lg:col-span-4 lg:border-l lg:border-white/[0.08] lg:pl-8">
+                <p class="text-sm text-zinc-400 leading-relaxed">
+                    Repositorio curado de sistemas de diseño, investigación UX e interfaces de alta precisión conectadas en tiempo real mediante Laravel & MySQL.
+                </p>
+                <div class="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between font-mono text-[11px] text-zinc-500">
+                    <span>TABLAS RELACIONALES: 05</span>
+                    <span>CASOS ACTIVOS: {{ $categories->sum('projects_count') }}</span>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Barra de Filtros por Categoría (RF-01) -->
-    <section class="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div class="flex flex-wrap items-center gap-2">
-            @php
-                $currentCategory = request()->query('category');
-            @endphp
+    <!-- Barra de Filtros por Disciplina (RF-01) -->
+    <section class="mb-12 flex flex-wrap items-center justify-between gap-4">
+        @php
+            $currentCategory = request()->query('category');
+        @endphp
 
+        <div class="flex flex-wrap items-center gap-2">
             <a href="{{ route('projects.index') }}"
-               class="px-4 py-2 rounded-xl text-xs font-semibold transition border {{ !$currentCategory ? 'bg-white text-slate-950 border-white shadow-sm' : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white' }}">
-                Todos los Casos ({{ $categories->sum('projects_count') }})
+               class="px-4 py-2 rounded-full text-xs font-medium transition border {{ !$currentCategory ? 'bg-zinc-100 text-zinc-950 border-zinc-100 font-semibold' : 'bg-surface text-zinc-400 border-white/[0.08] hover:border-white/20 hover:text-white' }}">
+                Todos <span class="font-mono text-[11px] opacity-70 ml-1">[{{ $categories->sum('projects_count') }}]</span>
             </a>
 
             @foreach ($categories as $category)
                 <a href="{{ route('projects.index', ['category' => $category->slug]) }}"
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition border {{ $currentCategory === $category->slug ? 'bg-slate-800 text-white border-slate-600 shadow-sm' : 'bg-slate-900/60 text-slate-400 border-slate-800/80 hover:border-slate-700 hover:text-slate-200' }}">
-                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: {{ $category->color_hex }}"></span>
+                   class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs font-medium transition border {{ $currentCategory === $category->slug ? 'bg-zinc-100 text-zinc-950 border-zinc-100 font-semibold' : 'bg-surface text-zinc-400 border-white/[0.08] hover:border-white/20 hover:text-white' }}">
+                    <span class="w-2 h-2 rounded-full" style="background-color: {{ $category->color_hex }}"></span>
                     <span>{{ $category->name }}</span>
-                    <span class="text-[11px] text-slate-500">({{ $category->projects_count }})</span>
+                    <span class="font-mono text-[11px] opacity-60">[{{ $category->projects_count }}]</span>
                 </a>
             @endforeach
         </div>
 
         @auth
             <a href="{{ route('projects.create') }}"
-               class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-xs font-bold text-white transition shadow-lg shadow-indigo-600/20">
-                <span>+ Publicar Caso de Estudio</span>
+               class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white hover:text-zinc-950 px-5 py-2 text-xs font-semibold text-white transition">
+                <span>+ Nuevo Caso de Estudio</span>
             </a>
         @endauth
     </section>
 
-    <!-- Galería Bento de Casos de Estudio -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        @forelse ($projects as $project)
-            <article class="group relative rounded-3xl border border-slate-800/90 bg-slate-900/50 overflow-hidden flex flex-col justify-between transition duration-300 hover:border-slate-700 hover:bg-slate-900/80 hover:shadow-2xl hover:shadow-indigo-950/20">
+    <!-- Grilla Editorial de Casos de Estudio -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-14">
+        @forelse ($projects as $index => $project)
+            <article class="group flex flex-col justify-between">
                 <div>
-                    <!-- Imagen de Portada con Badges Flotantes -->
-                    <div class="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-950">
-                        <img src="{{ $project->cover_image }}"
-                             alt="{{ $project->title }}"
-                             class="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
-
-                        <!-- Etiqueta Dinámica con Color Hexadecimal desde la BD -->
-                        <div class="absolute top-4 left-4 flex flex-wrap items-center gap-2">
-                            <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white backdrop-blur-md border border-white/15 shadow-sm"
-                                  style="background-color: {{ $project->category->color_hex }}CC;">
-                                {{ $project->category->name }}
-                            </span>
-
-                            @if ($project->is_featured)
-                                <span class="inline-flex items-center gap-1 rounded-full bg-amber-500/20 border border-amber-400/40 backdrop-blur-md px-3 py-1 text-xs font-bold text-amber-300">
-                                    ★ Destacado
-                                </span>
-                            @endif
+                    <!-- Metadatos Superiores de la Tarjeta (Fuera de la imagen para máxima limpieza) -->
+                    <div class="flex items-center justify-between font-mono text-xs text-zinc-400 mb-3 pb-2 border-b border-white/[0.08]">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-zinc-600">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-zinc-700">/</span>
+                            <span class="font-medium text-zinc-200 uppercase tracking-wider">{{ $project->client->company_name }}</span>
+                            <span class="text-zinc-600">·</span>
+                            <span class="text-zinc-500">{{ $project->client->country }}</span>
                         </div>
-
-                        <!-- Cliente Corporativo -->
-                        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                @if ($project->client->logo_url)
-                                    <img src="{{ $project->client->logo_url }}" alt="{{ $project->client->company_name }}" class="w-7 h-7 rounded-full object-cover border border-slate-700">
-                                @endif
-                                <span class="text-xs font-semibold text-slate-200">
-                                    {{ $project->client->company_name }} · <span class="text-slate-400">{{ $project->client->country }}</span>
-                                </span>
-                            </div>
-                            <span class="text-[11px] font-medium text-slate-400">
-                                {{ $project->published_at->format('M Y') }}
-                            </span>
-                        </div>
+                        <span class="text-zinc-500">{{ $project->published_at->format('M Y') }}</span>
                     </div>
 
-                    <!-- Cuerpo de la Tarjeta -->
-                    <div class="p-6 sm:p-7">
-                        <h2 class="text-xl sm:text-2xl font-bold text-white group-hover:text-indigo-400 transition leading-snug">
+                    <!-- Marco de Imagen Limpio con Hover Editorial -->
+                    <a href="{{ route('projects.show', $project) }}"
+                       class="block relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-surface border border-white/[0.08]">
+                        <img src="{{ $project->cover_image }}"
+                             alt="{{ $project->title }}"
+                             class="h-full w-full object-cover object-center transition duration-700 ease-out group-hover:scale-105">
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+
+                        <!-- Indicador Discreto si es Destacado -->
+                        @if ($project->is_featured)
+                            <div class="absolute top-4 right-4 rounded-full bg-obsidian/80 backdrop-blur-md border border-white/15 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber-300">
+                                ★ Featured Case
+                            </div>
+                        @endif
+
+                        <!-- Botón Flotante en Hover -->
+                        <div class="absolute bottom-4 right-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-300">
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-white text-zinc-950 px-4 py-2 text-xs font-bold shadow-xl">
+                                Abrir Caso ↗
+                            </span>
+                        </div>
+                    </a>
+
+                    <!-- Información Tipográfica Debajo de la Imagen -->
+                    <div class="mt-5">
+                        <div class="flex items-center gap-2 mb-2.5">
+                            <span class="w-2 h-2 rounded-full" style="background-color: {{ $project->category->color_hex }}"></span>
+                            <span class="font-mono text-xs uppercase tracking-wider" style="color: {{ $project->category->color_hex }}">
+                                {{ $project->category->name }}
+                            </span>
+                        </div>
+
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight group-hover:text-zinc-300 transition leading-snug">
                             <a href="{{ route('projects.show', $project) }}">
                                 {{ $project->title }}
                             </a>
                         </h2>
-                        <p class="mt-3 text-sm text-slate-400 line-clamp-3 leading-relaxed">
+
+                        <p class="mt-2.5 text-sm text-zinc-400 line-clamp-2 leading-relaxed">
                             {{ $project->summary }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Pie de Tarjeta y Acciones Rápidas -->
-                <div class="px-6 sm:px-7 pb-6 pt-4 border-t border-slate-800/70 flex items-center justify-between">
+                <!-- Barra Inferior de Acciones -->
+                <div class="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between">
                     <a href="{{ route('projects.show', $project) }}"
-                       class="inline-flex items-center gap-2 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition">
-                        <span>Explorar Caso de Estudio</span>
-                        <span class="transition group-hover:translate-x-1">→</span>
+                       class="font-mono text-xs uppercase tracking-wider text-zinc-300 hover:text-white inline-flex items-center gap-2 transition">
+                        <span>Explorar documentación</span>
+                        <span class="transition-transform group-hover:translate-x-1">→</span>
                     </a>
 
                     @auth
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-3">
                             <a href="{{ route('projects.edit', $project) }}"
-                               class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
-                                Editar
+                               class="font-mono text-xs text-zinc-400 hover:text-white transition">
+                                [Editar]
                             </a>
                             <form action="{{ route('projects.destroy', $project) }}" method="POST" class="form-delete inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
-                                        class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold text-rose-400 transition">
-                                    Eliminar
+                                <button type="submit" class="font-mono text-xs text-rose-400/80 hover:text-rose-400 transition">
+                                    [Eliminar]
                                 </button>
                             </form>
                         </div>
@@ -131,12 +147,13 @@
                 </div>
             </article>
         @empty
-            <!-- Estado Vacío (RNF-03) -->
-            <div class="col-span-full rounded-3xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center">
-                <p class="text-lg font-bold text-white">No se encontraron casos de estudio en esta categoría</p>
-                <p class="mt-1 text-sm text-slate-400">Prueba seleccionando otro filtro o publica un nuevo proyecto en el portafolio.</p>
-                <a href="{{ route('projects.index') }}" class="mt-5 inline-block rounded-xl bg-slate-800 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-700 transition">
-                    Ver todo el catálogo
+            <div class="col-span-full rounded-2xl border border-dashed border-white/15 bg-surface/40 p-16 text-center">
+                <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">[00 RESULTADOS]</p>
+                <p class="text-xl font-bold text-white">No hay casos registrados en esta disciplina</p>
+                <p class="mt-1 text-sm text-zinc-400">Selecciona otra categoría o registra un nuevo caso de estudio.</p>
+                <a href="{{ route('projects.index') }}"
+                   class="mt-6 inline-block rounded-full bg-zinc-100 px-5 py-2.5 text-xs font-semibold text-zinc-950 hover:bg-white transition">
+                    Mostrar archivo completo
                 </a>
             </div>
         @endforelse
